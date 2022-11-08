@@ -22,12 +22,30 @@ class Cursor {
     Screen.setBackgroundColor(this.row, this.col, this.cursorColor);
   }
 
+  down() {
+    if(this.row < this.numRows - 1){
+      this.row++;
+    }
+  }
+
+  up() {
+    if(this.row > 0){
+      this.row--;
+    }
+  }
+
   left() {
     // Move cursor left
+    if(this.col > 0){
+      this.col--;
+    }
   }
 
   right() {
     // Move cursor right
+    if(this.col < this.numCols - 1){
+      this.col++;
+    }
   }
 
 }
