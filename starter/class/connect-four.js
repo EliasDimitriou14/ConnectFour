@@ -34,7 +34,7 @@ class ConnectFour {
 
   static checkWin(grid) {
 
-    let flag = false;
+    let empty = true;
     let countO = 0;
     let countX = 0;
     let winner = ' ';
@@ -45,53 +45,78 @@ class ConnectFour {
       row.forEach((ele) => {
         if(ele !== ' '){
           count++;
-          flag = true;
+          empty = false;
         }
       });
     });
+    if(empty === true){
+      return false;
+    }
     // Recognize empty grid as no winner
 
+
     // Recognize horizontal wins
-    // grid.forEach((row) => {
-    //   countO = 0;
-    //   countX = 0;
-    //   row.forEach((ele) => {
-    //     if(ele === 'O'){
-    //       countO++;
-    //       if(countX > 0){
-    //         countX = 0;
-    //       }
-    //     }else if(ele === 'X'){
-    //       countX++;
-    //       if(countO > 0){
-    //         countO = 0;
-    //       }
-    //     }
-    //   });
-    //   if(countO >= 4){
-    //     winner = 'O';
-    //   }else if(countX >= 4){
-    //     winner = 'X';
-    //   }
-    // });
-    // if(winner === 'O' || winner === 'X'){
-    //   return winner;
-    // }
+    for(let i = 0; i < grid.length; i++){
+      countX = countO = 0;
+      for(let j = 0; j < grid[0].length; j++){
+        if(grid[i][j] === 'O'){
+          countO++
+          if(countO === 4){
+            winner = 'O';
+          }
+          if(countX > 0){
+            countX = 0;
+          }
+        }else if(grid[i][j] === 'X'){
+          countX++
+          if(countX === 4){
+            winner = 'X';
+          }
+          if(countO > 0){
+            countO = 0;
+          }
+        }
+      }
+    }
+    if(winner === 'X' || winner === 'O'){
+      return winner;
+    }
     // Recognize horizontal wins
 
-    if(winner === 'O' || winner === 'X'){
+    // Recognize vertical wins
+    for(let i = 0; i < grid[0].length; i++){
+      countO = countX = 0;
+      for(let j = 0; j < grid.length; j++){
+        if(grid[j][i] === 'O'){
+          countO++
+          if(countO === 4){
+            winner = 'O';
+          }
+          if(countX > 0){
+            countX = 0;
+          }
+        }else if(grid[j][i] === 'X'){
+          countX++
+          if(countX === 4){
+            winner = 'X';
+          }
+          if(countO > 0){
+            countO = 0;
+          }
+        }
+      }
+    }
+    if(winner === 'X' || winner === 'O'){
       return winner;
-    }else if(count === grid.length * grid[0].length){
-      return 'T';
-    }else if(flag === false){
-      return flag;
+    }
+    // Recognize vertical wins
+
+    if(count === grid.length * grid[0].length){
+      winner = 'T';
+      return winner;
     }else{
       return false;
     }
-
-
-    // Recognize horizontal wins
-
     // Return 'X' if player X wins
     // Return 'O' if player O wins
     // Return 'T' if the game is a tie
