@@ -20,16 +20,37 @@ class ConnectFour {
     Screen.initialize(6, 7);
     Screen.setGridlines(true);
 
-    // Replace this with real commands
-    Screen.addCommand('t', 'test command (remove)', ConnectFour.testCommand);
-
     this.cursor.setBackgroundColor();
+
+    // Replace this with real commands
+    Screen.addCommand('up', 'move cursor up', this.cursor.up.bind(this.cursor));
+    Screen.addCommand('down', 'move cursor down', this.cursor.down.bind(this.cursor));
+    Screen.addCommand('left', 'move cursor left', this.cursor.left.bind(this.cursor));
+    Screen.addCommand('right', 'move cursor right', this.cursor.right.bind(this.cursor));
+    Screen.addCommand('space', 'places X or O according to player turn',this.makeMove.bind(this));
+
+
     Screen.render();
   }
 
-  // Remove this
-  static testCommand() {
-    console.log("TEST COMMAND");
+
+  makeMove() {
+    if(this.grid[this.cursor.row][this.cursor.col] === ' '){
+      Screen.setGrid(this.cursor.row, this.cursor.col, this.playerTurn)
+      Screen.render();
+      this.grid[this.cursor.row][this.cursor.col] = this.playerTurn;
+      let winner = ConnectFour.checkWin(this.grid)
+      if(winner === false){
+        console.log("No winner yet...")
+      }else{
+        ConnectFour.endGame(winner);
+      }
+      if(this.playerTurn === 'O'){
+        this.playerTurn = 'X';
+      }else{
+        this.playerTurn = 'O';
+      }
+    }
   }
 
   static checkWin(grid) {
@@ -60,7 +81,7 @@ class ConnectFour {
       countX = countO = 0;
       for(let j = 0; j < grid[0].length; j++){
         if(grid[i][j] === 'O'){
-          countO++
+          countO++;
           if(countO === 4){
             winner = 'O';
           }
@@ -68,13 +89,15 @@ class ConnectFour {
             countX = 0;
           }
         }else if(grid[i][j] === 'X'){
-          countX++
+          countX++;
           if(countX === 4){
             winner = 'X';
           }
           if(countO > 0){
             countO = 0;
           }
+        }else{
+          countX = countO = 0;
         }
       }
     }
@@ -85,7 +108,7 @@ class ConnectFour {
 
     // Recognize vertical wins
     for(let i = 0; i < grid[0].length; i++){
-      countO = countX = 0;
+      countX = countO = 0;
       for(let j = 0; j < grid.length; j++){
         if(grid[j][i] === 'O'){
           countO++
@@ -104,16 +127,17 @@ class ConnectFour {
             countO = 0;
           }
         }
+        else{
+          countX = countO = 0;
+        }
       }
-    }
-    if(winner === 'X' || winner === 'O'){
-      return winner;
     }
     // Recognize vertical wins
 
-    if(count === grid.length * grid[0].length){
-      winner = 'T';
+    if(winner === 'X' || winner === 'O'){
       return winner;
+    }else if(count === grid.length * grid[0].length){
+      return 'T';
     }else{
       return false;
     }
